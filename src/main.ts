@@ -11,7 +11,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      skipMissingProperties: true,
+      // skipMissingProperties: true,
     }),
   );
   await app.listen(3000);

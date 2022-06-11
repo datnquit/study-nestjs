@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { PostController } from './post.controller';
-import { PostService } from './post.service';
+import { PostController } from './controllers/post.controller';
+import { PostService } from './services/post.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PostSchema } from './post.model';
-import { PostRepository } from './post.repository';
+import { PostSchema } from './models/post.model';
+import { PostRepository } from './repositories/post.repository';
+import { CategorySchema } from './models/category.model';
+import { CategoryService } from './services/category.service';
+import { CategoryRepository } from './repositories/category.repository';
+import { CategoryController } from './controllers/category.controller';
 
 @Module({
   imports: [
@@ -12,9 +16,18 @@ import { PostRepository } from './post.repository';
         name: 'Post',
         schema: PostSchema,
       },
+      {
+        name: 'Category',
+        schema: CategorySchema,
+      },
     ]),
   ],
-  controllers: [PostController],
-  providers: [PostService, PostRepository],
+  controllers: [PostController, CategoryController],
+  providers: [
+    PostService,
+    CategoryService,
+    PostRepository,
+    CategoryRepository,
+  ],
 })
 export class PostModule {}
