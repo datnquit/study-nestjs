@@ -28,6 +28,8 @@
     "@nestjs/mongoose": "^7.2.4",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.0.0",
+    "@types/aws-sdk": "^2.7.0",
+    "aws-sdk": "^2.1152.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
