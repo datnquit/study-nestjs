@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, LoginUserDto } from '../dto/user.dto';
 import * as bcrypt from 'bcrypt';
-import e from 'express';
 
 @Injectable()
 export class UserService {
@@ -44,5 +43,36 @@ export class UserService {
     return await this.userRepository.findByCondition({
       email: email,
     });
+  }
+
+  async update(filter, update) {
+    if (update.refreshToken) {
+      update.refreshToken = await bcrypt.hash(
+        this.reverse(update.refreshToken),
+        10,
+      );
+    }
+    return await this.userRepository.findByConditionAndUpdate(filter, update);
+  }
+
+  async getUserRefreshToken(refreshToken: string, email: string) {
+    const user = await this.findByEmail(email);
+    if (!user) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+    const is_equal = await bcrypt.compare(
+      this.reverse(refreshToken),
+      user.refreshToken,
+    );
+
+    if (!is_equal) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+
+    return user;
+  }
+
+  private reverse(s) {
+    return s.split('').reverse().join('');
   }
 }
