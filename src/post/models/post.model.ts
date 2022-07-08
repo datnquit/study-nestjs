@@ -12,6 +12,8 @@ const PostSchema = new Schema(
       ref: 'User',
     },
     categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+    tags: [String],
+    numbers: [Number],
   },
   {
     timestamps: true,
@@ -27,4 +29,6 @@ export interface Post extends Document {
   content: string;
   user: User;
   categories: [Category];
+  tags: [string];
+  numbers: [number];
 }

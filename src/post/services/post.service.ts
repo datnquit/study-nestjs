@@ -73,4 +73,31 @@ export class PostService {
   async deletePost(post_id: string) {
     return await this.postRepository.deleteOne(post_id);
   }
+
+  async getByArray() {
+    // return await this.postRepository.getByCondition({
+    //   tags: ['red', 'blank'],
+    // });
+    // return await this.postRepository.getByCondition({
+    //   tags: { $all: ['red', 'blank'] },
+    // });
+    // return await this.postRepository.getByCondition({
+    //   tags: 'red',
+    // });
+    // return await this.postRepository.getByCondition({
+    //   numbers: { $gt: 20 },
+    // });
+    // return await this.postRepository.getByCondition({
+    //   numbers: { $gt: 15, $lt: 20 },
+    // });
+    // return await this.postRepository.getByCondition({
+    //   numbers: { $elemMatch: { $gt: 20, $lt: 30 } },
+    // });
+    // return await this.postRepository.getByCondition({
+    //   'numbers.0': { $gt: 10 },
+    // });
+    return await this.postRepository.getByCondition({
+      tags: { $size: 3 },
+    });
+  }
 }
