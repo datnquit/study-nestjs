@@ -24,7 +24,33 @@ export class PostService {
   async getPostById(post_id: string) {
     const post = await this.postRepository.findById(post_id);
     if (post) {
-      await post.populate('user').execPopulate();
+      // await post
+      //   .populate('user', 'name -_id')
+      //   .populate('categories', 'title')
+      //   .execPopulate();
+      // await post
+      //   .populate({ path: 'user' })
+      //   .populate({ path: 'categories' })
+      //   .execPopulate();
+      // await post
+      //   .populate([{ path: 'user' }, { path: 'categories' }])
+      //   .execPopulate();
+      // await post
+      //   .populate({
+      //     path: 'categories',
+      //     match: { _id: '62a45f081fa1129c58dd4201' },
+      //     select: 'title',
+      //     options: { limit: 1 },
+      //     populate: {
+      //       path: 'posts',
+      //     },
+      //   })
+      //   .execPopulate();
+      await post.populate('category').execPopulate();
+      // console.log(post.populated('user'));
+      // console.log(post.depopulate('user'));
+      // console.log(post.populated('user'));
+
       return post;
     } else {
       // throw new PostNotFoundException(post_id);

@@ -31,4 +31,5 @@ export interface Post extends Document {
   categories: [Category];
   tags: [string];
   numbers: [number];
+  category: Category;
 }
