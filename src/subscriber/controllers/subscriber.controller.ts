@@ -1,8 +1,18 @@
-import { Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  Inject,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('subscriber')
+@UseInterceptors(ClassSerializerInterceptor)
 export class SubscriberController {
   constructor(
     @Inject('SUBSCRIBER_SERVICE')
@@ -41,5 +51,16 @@ export class SubscriberController {
       req.user,
     );
     return true;
+  }
+
+  @Post('rmq')
+  @UseGuards(AuthGuard('jwt'))
+  async createPost(@Req() req: any) {
+    return this.subscriberService.send(
+      {
+        cmd: 'add-subscriber',
+      },
+      req.user,
+    );
   }
 }
