@@ -21,10 +21,17 @@ import {
 import { ExceptionLoggerFilter } from '../../utils/exceptionLogger.filter';
 import { HttpExceptionFilter } from '../../utils/httpException.filter';
 import { AuthGuard } from '@nestjs/passport';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CreatePostCommand } from '../commands/createPost.command';
+import { GetPostQuery } from '../queries/getPost.query';
 
 @Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @Get()
   getAllPosts(@Query() { start, page, limit }: PaginationPostDto) {
@@ -38,10 +45,21 @@ export class PostController {
     return await this.postService.getPostById(id);
   }
 
+  @Get(':id/get-by-query')
+  async getDetailPostByQuery(@Param() { id }: FindPostDto) {
+    return this.queryBus.execute(new GetPostQuery(id));
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async createPost(@Req() req: any, @Body() post: CreatePostDto) {
     return this.postService.createPost(req.user, post);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('create-by-command')
+  async createByCommand(@Req() req: any, @Body() post: CreatePostDto) {
+    return this.commandBus.execute(new CreatePostCommand(req.user, post));
   }
 
   @UseGuards(AuthGuard('jwt'))
