@@ -1,5 +1,6 @@
 import {
   Body,
+  CacheInterceptor,
   Controller,
   Delete,
   Get,
@@ -10,6 +11,7 @@ import {
   Req,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PostService } from '../services/post.service';
 import {
@@ -43,6 +45,13 @@ export class PostController {
   @UseFilters(HttpExceptionFilter)
   async getPostById(@Param() { id }: FindPostDto) {
     return await this.postService.getPostById(id);
+  }
+
+  @Get(':id/get-with-cache')
+  @UseInterceptors(CacheInterceptor)
+  async getDetailPostWithCache(@Param() { id }: FindPostDto) {
+    console.log('handle');
+    return (await this.postService.getPostById(id)).toJSON();
   }
 
   @Get(':id/get-by-query')

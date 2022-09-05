@@ -1,6 +1,8 @@
 import {
+  CACHE_MANAGER,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,12 +12,14 @@ import { PostNotFoundException } from '../exceptions/postNotFound.exception';
 import { User } from '../../user/models/user.model';
 import { CategoryRepository } from '../repositories/category.repository';
 import { isValidObjectId } from 'mongoose';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class PostService {
   constructor(
     private readonly postRepository: PostRepository,
     private readonly categoryRepository: CategoryRepository,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async getAllPosts(start: string, page: number, limit: number) {

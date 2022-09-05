@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { PostController } from './controllers/post.controller';
 import { PostService } from './services/post.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,6 +14,10 @@ import { GetPostHandler } from './handler/getPost.handler';
 
 @Module({
   imports: [
+    CacheModule.register({
+      ttl: 10,
+      max: 100,
+    }),
     MongooseModule.forFeature([
       {
         name: 'Post',
