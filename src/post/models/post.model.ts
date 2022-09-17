@@ -11,6 +11,8 @@ const PostSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    tags: [String],
+    numbers: [Number],
     categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     // created_at: { type: Date, required: true, default: Date.now },
   },
@@ -31,5 +33,7 @@ export interface Post extends Document {
   description: string;
   content: string;
   user: User;
+  tags: [string];
+  numbers: [number];
   categories: [Category];
 }

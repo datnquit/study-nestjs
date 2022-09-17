@@ -66,4 +66,9 @@ export class PostController {
   async getByCategories(@Query('category_ids') category_ids) {
     return await this.postService.getByCategories(category_ids);
   }
+
+  @Get('get/array')
+  async getByArray() {
+    return this.postService.getByArray();
+  }
 }
