@@ -53,7 +53,12 @@ export class PostController {
   @UseGuards(AuthGuard('jwt'))
   @Get('user/all')
   async getPostUser(@Req() req: any) {
-    await req.user.populate('posts').execPopulate();
+    await req.user
+      .populate({
+        path: 'posts',
+        // select: 'title',
+      })
+      .execPopulate();
     return req.user.posts;
   }
 
