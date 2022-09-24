@@ -11,7 +11,11 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { CreatePostDto, UpdatePostDto } from '../dto/post.dto';
+import {
+  CreatePostDto,
+  PaginationPostDto,
+  UpdatePostDto,
+} from '../dto/post.dto';
 import { PostService } from '../services/post.service';
 import { ExceptionLoggerFilter } from '../../utils/exceptionLogger.filter';
 import { HttpExceptionFilter } from '../../utils/httpException.filter';
@@ -22,8 +26,8 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get()
-  getAllPost() {
-    return this.postService.getAllPosts();
+  getAllPost(@Query() { page, limit, start }: PaginationPostDto) {
+    return this.postService.getAllPosts(page, limit, start);
   }
 
   @Get(':id')

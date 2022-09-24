@@ -10,6 +10,7 @@ import { PostNotFoundException } from '../exceptions/postNotFound.exception';
 import { UserService } from '../../user/services/user.service';
 import { User } from '../../user/models/user.model';
 import { CategoryRepository } from '../repositories/category.repository';
+import { isValidObjectId } from 'mongoose';
 
 @Injectable()
 export class PostService {
@@ -19,8 +20,25 @@ export class PostService {
     private readonly categoryRepository: CategoryRepository,
   ) {}
 
-  async getAllPosts() {
-    return this.postRepository.getByCondition({});
+  async getAllPosts(page: number, limit: number, start: string) {
+    const count = await this.postRepository.countDocuments({});
+    const count_page = (count / limit).toFixed();
+    const posts = await this.postRepository.getByCondition(
+      {
+        _id: {
+          $gt: isValidObjectId(start) ? start : '000000000000000000000000',
+        },
+      },
+      null,
+      {
+        sort: {
+          _id: 1,
+        },
+        skip: (page - 1) * limit,
+        limit: Number(limit),
+      },
+    );
+    return { count_page, posts };
   }
 
   async getPostById(post_id: string) {
