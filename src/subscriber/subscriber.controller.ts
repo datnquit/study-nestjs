@@ -42,4 +42,15 @@ export class SubscriberController {
     );
     return true;
   }
+
+  @Post('rmq')
+  @UseGuards(AuthGuard('jwt'))
+  async createPost(@Req() req: any) {
+    return this.subscriberService.send(
+      {
+        cmd: 'add-subscriber',
+      },
+      req.user,
+    );
+  }
 }
