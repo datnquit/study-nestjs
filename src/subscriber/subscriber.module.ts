@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { SubscriberController } from './subscriber.controller';
+import { join } from 'path';
 
 @Module({
   imports: [ConfigModule],
@@ -17,19 +18,27 @@ import { SubscriberController } from './subscriber.controller';
         //     port: configService.get('SUBSCRIBER_SERVICE_PORT'),
         //   },
         // }),
-        const user = configService.get('RABBITMQ_USER');
-        const password = configService.get('RABBITMQ_PASSWORD');
-        const host = configService.get('RABBITMQ_HOST');
-        const queueName = configService.get('RABBITMQ_QUEUE_NAME');
+        // const user = configService.get('RABBITMQ_USER');
+        // const password = configService.get('RABBITMQ_PASSWORD');
+        // const host = configService.get('RABBITMQ_HOST');
+        // const queueName = configService.get('RABBITMQ_QUEUE_NAME');
 
+        // return ClientProxyFactory.create({
+        //   transport: Transport.RMQ,
+        //   options: {
+        //     urls: [`amqp://${user}:${password}@${host}`],
+        //     queue: queueName,
+        //     queueOptions: {
+        //       durable: true,
+        //     },
+        //   },
+        // });
         return ClientProxyFactory.create({
-          transport: Transport.RMQ,
+          transport: Transport.GRPC,
           options: {
-            urls: [`amqp://${user}:${password}@${host}`],
-            queue: queueName,
-            queueOptions: {
-              durable: true,
-            },
+            package: 'subscribers',
+            protoPath: join(process.cwd(), 'src/subscriber/subscribers.proto'),
+            url: configService.get('GRPC_CONNECTION_URL'),
           },
         });
       },
