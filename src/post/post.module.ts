@@ -9,6 +9,9 @@ import { CategorySchema } from './models/category.model';
 import { CategoryController } from './controllers/category.controller';
 import { CategoryRepository } from './repositories/category.repository';
 import { CategoryService } from './services/category.service';
+import { CqrsModule } from '@nestjs/cqrs';
+import { CreatePostHandler } from './handler/createPost.handler';
+import { GetPostHandler } from './handler/getPost.handler';
 
 @Module({
   imports: [
@@ -23,8 +26,16 @@ import { CategoryService } from './services/category.service';
       },
     ]),
     UserModule,
+    CqrsModule,
   ],
   controllers: [PostController, CategoryController],
-  providers: [PostService, PostRepository, CategoryRepository, CategoryService],
+  providers: [
+    PostService,
+    PostRepository,
+    CategoryRepository,
+    CategoryService,
+    CreatePostHandler,
+    GetPostHandler,
+  ],
 })
 export class PostModule {}
