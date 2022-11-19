@@ -1,8 +1,11 @@
 import {
   Body,
+  CACHE_MANAGER,
+  CacheInterceptor,
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -10,6 +13,7 @@ import {
   Req,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   CreatePostDto,
@@ -23,6 +27,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreatePostCommand } from '../commands/createPost.command';
 import { GetPostQuery } from '../queries/getPost.query';
+import { Cache } from 'cache-manager';
 
 @Controller('post')
 export class PostController {
@@ -30,6 +35,7 @@ export class PostController {
     private readonly postService: PostService,
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Get()
@@ -42,6 +48,24 @@ export class PostController {
   // @UseFilters(ExceptionLoggerFilter)
   getPostById(@Param('id') id: string) {
     return this.postService.getPostById(id);
+  }
+
+  @Get(':id/get-with-cache')
+  @UseInterceptors(CacheInterceptor)
+  async getPostDetailWithCache(@Param('id') id: string) {
+    console.log('Run here');
+    return (await this.postService.getPostById(id)).toJSON();
+  }
+
+  @Get('cache/demo/set-cache')
+  async demoSetCache() {
+    await this.cacheManager.set('newnet', 'hello world', { ttl: 60 * 10 });
+    return true;
+  }
+
+  @Get('cache/demo/get-cache')
+  async demoGetCache() {
+    return this.cacheManager.get('newnet');
   }
 
   @Get(':id/get-by-query')
