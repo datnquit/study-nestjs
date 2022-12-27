@@ -2,10 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, LoginUserDto } from '../dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import { MailerService } from '@nest-modules/mailer';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private mailerService: MailerService,
+  ) {}
 
   async create(userDto: CreateUserDto) {
     userDto.password = await bcrypt.hash(userDto.password, 10);
@@ -17,6 +21,15 @@ export class UserService {
     if (userInDb) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
+
+    await this.mailerService.sendMail({
+      to: userDto.email,
+      subject: 'Welcome to my website',
+      template: './welcome',
+      context: {
+        name: userDto.name,
+      },
+    });
 
     return await this.userRepository.create(userDto);
   }
