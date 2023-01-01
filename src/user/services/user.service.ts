@@ -34,6 +34,18 @@ export class UserService {
     return await this.userRepository.create(userDto);
   }
 
+  async setTwoFactorAuthenticationSecret(secret, user_id) {
+    return this.userRepository.findByIdAndUpdate(user_id, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
+  async turnOnTwoFactorAuthentication(user_id: string) {
+    return this.userRepository.findByIdAndUpdate(user_id, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
+  }
+
   async findByLogin({ email, password }: LoginUserDto) {
     const user = await this.userRepository.findByCondition({
       email: email,

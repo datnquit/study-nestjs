@@ -10,10 +10,14 @@ import { UserRepository } from './repositories/user.repository';
 import { JwtStrategy } from './jwt.strategy';
 import { UserController } from './controllers/user.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TwoFactorAuthenticationController } from './controllers/twoFactorAuthentication.controller';
+import { TwoFactorAuthenticationService } from './services/twoFactorAuthentication.service';
+import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
 
 // @Global()
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     MongooseModule.forFeature([
       {
         name: 'User',
@@ -36,8 +40,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  controllers: [AuthController, UserController],
-  providers: [UserService, AuthService, UserRepository, JwtStrategy],
+  controllers: [
+    AuthController,
+    UserController,
+    TwoFactorAuthenticationController,
+  ],
+  providers: [
+    UserService,
+    AuthService,
+    UserRepository,
+    JwtStrategy,
+    TwoFactorAuthenticationService,
+    JwtTwoFactorStrategy,
+  ],
   exports: [UserService],
 })
 export class UserModule {}
