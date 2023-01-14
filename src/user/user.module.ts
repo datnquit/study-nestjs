@@ -13,6 +13,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TwoFactorAuthenticationController } from './controllers/twoFactorAuthentication.controller';
 import { TwoFactorAuthenticationService } from './services/twoFactorAuthentication.service';
 import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
+import { BullModule } from '@nestjs/bull';
+import { EmailConsumer } from './consumers/email.consumer';
 
 // @Global()
 @Module({
@@ -39,6 +41,9 @@ import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
       }),
       inject: [ConfigService],
     }),
+    BullModule.registerQueue({
+      name: 'send-mail',
+    }),
   ],
   controllers: [
     AuthController,
@@ -52,6 +57,7 @@ import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
     JwtStrategy,
     TwoFactorAuthenticationService,
     JwtTwoFactorStrategy,
+    EmailConsumer,
   ],
   exports: [UserService],
 })
