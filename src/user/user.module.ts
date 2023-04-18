@@ -59,6 +59,6 @@ import { EmailConsumer } from './consumers/email.consumer';
     JwtTwoFactorStrategy,
     EmailConsumer,
   ],
-  exports: [UserService],
+  exports: [UserService, AuthService],
 })
 export class UserModule {}

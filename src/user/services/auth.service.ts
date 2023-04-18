@@ -32,6 +32,22 @@ export class AuthService {
     };
   }
 
+  async handleVerifyToken(token) {
+    try {
+      const payload = this.jwtService.verify(token); // this.configService.get('SECRETKEY')
+      return payload['email'];
+    } catch (e) {
+      throw new HttpException(
+        {
+          key: '',
+          data: {},
+          statusCode: HttpStatus.UNAUTHORIZED,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
+
   async validateUser(email) {
     const user = await this.userService.findByEmail(email);
     if (!user) {

@@ -12,6 +12,7 @@ import { SubscriberModule } from './subscriber/subscriber.module';
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 import { join } from 'path';
 import { BullModule } from '@nestjs/bull';
+import { EventGateway } from './event.gateway';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { BullModule } from '@nestjs/bull';
   ],
   controllers: [AppController],
   providers: [
+    EventGateway,
     AppService,
     // {
     //   provide: APP_FILTER,
