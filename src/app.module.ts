@@ -11,6 +11,7 @@ import { MediaModule } from './media/media.module';
 import { SubscriberModule } from './subscriber/subscriber.module';
 import { join } from 'path';
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -43,6 +44,24 @@ import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
           options: {
             strict: true,
           },
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    // BullModule.forRoot({
+    //   redis: {
+    //     host: 'localhost',
+    //     port: 6379,
+    //   },
+    // }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        redis: {
+          host: config.get('REDIS_HOST'),
+          port: config.get('REDIS_PORT'),
+          // username: config.get('REDIS_USERNAME'),
+          password: config.get('REDIS_PASSWORD'),
         },
       }),
       inject: [ConfigService],

@@ -14,6 +14,8 @@ import { JwtRefreshTokenStrategy } from './jwt-refresh-token.strategy';
 import { TwoFactorAuthenticationController } from './controllers/twoFactorAuthentication.controller';
 import { TwoFactorAuthenticationService } from './services/twoFactorAuthentication.service';
 import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
+import { BullModule } from '@nestjs/bull';
+import { EmailConsumer } from './consumers/email.consumer';
 
 @Module({
   imports: [
@@ -35,6 +37,9 @@ import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
         expiresIn: process.env.EXPIRESIN,
       },
     }),
+    BullModule.registerQueue({
+      name: 'send-mail',
+    }),
   ],
   controllers: [
     AuthController,
@@ -49,6 +54,7 @@ import { JwtTwoFactorStrategy } from './jwtTwoFactor.strategy';
     JwtRefreshTokenStrategy,
     TwoFactorAuthenticationService,
     JwtTwoFactorStrategy,
+    EmailConsumer,
   ],
 })
 export class UserModule {}
