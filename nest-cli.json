@@ -3,7 +3,8 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "assets": [
-      { "include": "templates/**/*", "outDir": "dist/src" }
+      { "include": "templates/**/*", "outDir": "dist/src" },
+      { "include": "views/**", "outDir": "dist"}
     ]
   }
 }

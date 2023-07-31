@@ -5,12 +5,12 @@ import { PostModule } from './post/post.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
-import { APP_FILTER } from '@nestjs/core';
-import { ExceptionLoggerFilter } from './utils/exceptionLogger.filter';
 import { MediaModule } from './media/media.module';
 import { SubscriberModule } from './subscriber/subscriber.module';
 import { join } from 'path';
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { EventGateway } from './event.gateway';
 
 @Module({
   imports: [
@@ -50,10 +50,12 @@ import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
     UserModule,
     MediaModule,
     SubscriberModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    EventGateway,
     // {
     //   provide: APP_FILTER,
     //   useClass: ExceptionLoggerFilter,

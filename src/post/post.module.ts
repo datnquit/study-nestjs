@@ -1,4 +1,4 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { CacheModule, Global, Module } from '@nestjs/common';
 import { PostController } from './controllers/post.controller';
 import { PostService } from './services/post.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -12,6 +12,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CreatePostHandler } from './handler/createPost.handler';
 import { GetPostHandler } from './handler/getPost.handler';
 
+@Global()
 @Module({
   imports: [
     CacheModule.register({
@@ -39,5 +40,6 @@ import { GetPostHandler } from './handler/getPost.handler';
     CreatePostHandler,
     GetPostHandler,
   ],
+  exports: [PostService],
 })
 export class PostModule {}
